@@ -43,8 +43,10 @@ class FilePickerApp extends StatelessWidget {
     return MaterialApp(
       title: appName,
       theme: ThemeData(
-          //primarySwatch: Colors.red,
-          colorScheme: const ColorScheme.dark(primary: Colors.red)),
+        colorScheme: const ColorScheme.dark(
+          primary: Colors.blue,
+        ),
+      ),
       home: const FilePickerWidget(title: appName),
     );
   }
@@ -141,14 +143,14 @@ class _FilePickerWidgetState extends State<FilePickerWidget> {
     });
   }
 
-  void _checkEquality(String? input) {
+  void _checkEquality(String input) {
     if (_hashValue.isEmpty) {
       setState(() {
         _appState = ApplicationState.notReady;
         _infolText = 'Please select a file.';
       });
       return;
-    } else if (input == null || input.isEmpty) {
+    } else if (input.isEmpty) {
       setState(() {
         _appState = ApplicationState.notReady;
         _infolText = 'Please enter provided checksum.';
@@ -171,7 +173,7 @@ class _FilePickerWidgetState extends State<FilePickerWidget> {
 
   ChoiceChip _makeChiceChip(String label, Algorithm algorithm) {
     return ChoiceChip(
-      selectedColor: Colors.red,
+      selectedColor: Colors.blue,
       label: Text(label),
       selected: _algorithm == algorithm,
       onSelected: (value) {
@@ -188,7 +190,7 @@ class _FilePickerWidgetState extends State<FilePickerWidget> {
         return const Icon(
           Icons.info,
           color: Colors.blue,
-          size: 60,
+          size: 80,
         );
       case ApplicationState.processing:
         return const CircularProgressIndicator();
@@ -196,13 +198,13 @@ class _FilePickerWidgetState extends State<FilePickerWidget> {
         return const Icon(
           Icons.check_circle_outline,
           color: Colors.green,
-          size: 60,
+          size: 80,
         );
       case ApplicationState.error:
         return const Icon(
           Icons.error_outline,
           color: Colors.red,
-          size: 60,
+          size: 80,
         );
     }
   }
@@ -263,6 +265,10 @@ class _FilePickerWidgetState extends State<FilePickerWidget> {
     var buttonUnit = Center(
       child: ElevatedButton(
         onPressed: () {
+          if (_appState == ApplicationState.processing) {
+            return;
+          }
+
           _pickFile();
 
           setState(() {
@@ -287,7 +293,7 @@ class _FilePickerWidgetState extends State<FilePickerWidget> {
             controller: _textEditController,
             onSubmitted: _checkEquality,
             decoration: const InputDecoration(
-              hintText: 'Please enter provided checksum',
+              hintText: 'Please enter provided checksum here',
             ),
           ),
         ),
